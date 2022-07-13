@@ -1,0 +1,143 @@
+{% extends "base2.html" %}
+{% block content %}
+    <br><br>
+    <div class="container-fluid p-3 bg-secondary text-white">
+        <h2 style="font-family: verdana">Faculty Publication Repository</h2>
+    </div>
+    <br /><br />
+
+    <div class="container p-2 my-2">
+        <table class="table">
+        <tbody>
+            {% if paper.is_authorized == None %}
+                <th scope="row">Authorization:</th>
+                <td><span class="badge badge-danger">This is not authorized yet</span></td>
+            {% endif %}
+            <tr>
+                <th scope="row">Title:</th>
+                <td>
+                    {{ paper.title }}
+                </td>
+            </tr>
+            <tr>
+                <th scope="row">Abstract:</th>
+                <td>
+                    {{ paper.abstract }}
+                </td>
+            </tr>
+            <tr>
+                <th scope="row">Authors:</th>
+                <td>
+                    <ul style="list-style-type: none;">
+                        {% for author in paper.authors %}
+                            {% if author.faculty %}
+                                <li><a href="{{ url_for('faculty_profile', id=author.id) }}">{{ author.fname + " " + author.lname }}</a></li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                </td>
+            </tr>
+            <tr>
+                <th scope="row">Published Year:</th>
+                <td>{{ paper.published_year }}</td>
+            </tr>
+            <tr>
+                <th scope="row">Appears in Department:</th>
+                <td>{{ paper.department_area.department.name }}</td>
+            </tr>
+            {% if citations != [] %}
+            <tr>
+                <th scope="row">Citations</th>
+                <td>
+                    <ul style="list-style-type: none;">
+                        {% for pcit in citations %}
+                            <li><a href="{{ url_for('view_paper', id=pcit.id) }}">{{ pcit.title }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </td>
+            </tr>
+            {% endif %}
+
+            {% if citedby != [] %}
+            <tr>
+                <th scope="row">Cited By</th>
+                <td>
+                    <ul style="list-style-type: none;">
+                        {% for pcit in citedby %}
+                            <li><a href="{{ url_for('view_paper', id=pcit.id) }}">{{ pcit.title }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </td>
+            </tr>
+            {% endif %}
+            <tr>
+                <th scope="row">Publisher:</th>
+                <td>{{ paper.publisher }}</td>
+            </tr>
+            <tr>
+                <th scope="row">Paper ID:</th>
+                <td>{{ paper.unique_paper_id }}</td>
+            </tr>
+        </tbody>
+        </table>
+
+        {% if current_user in paper.authors %}
+            <button class="btn btn-danger" onclick="confirmDelete();">Delete</button>
+            <a class="btn btn-warning" href="{{ url_for('edit_publish_paper', id=paper.id) }}">Edit</a>
+        {% endif %}
+    </div>
+
+    <div class="container p-4 my-3 border">
+        <table class="table">
+        <thead class="thead-dark">
+            <tr>
+                <th colspan="4">Files in this system</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><b>Files</b></td>
+                <td><b>Size</b></td>
+                <td><b>Format</b></td>
+                <td style="text-align: center;"><b>Download</b></td>
+            </tr>
+            {% if paper.paper_file %}
+                {% if not paper_access %}
+                    <tr><td colspan="3"><span class="badge badge-danger">This is Restricted</span></td></tr>
+                {% endif %}
+                <tr>
+                    <td>
+                        <a href="{{ paper.get_paper_file_url() }}"  target="_blank">{{ paper.get_paper_name() }}</a>
+                    </td>
+                    <td>{{ paper.get_paper_size(unit="KB") }}KB</td>
+                    <td>{{ paper.paper_file.split(".")[-1] }}</td>
+                    <td style="text-align: center;"><a href="{{ url_for('download_paper', id=paper.id) }}"><i class="fas fa-download"></i></a></td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="3" align="center"><b>No files in this system</b></td>
+                </tr>
+            {% endif %}
+        </tbody>
+        </table>
+    </div>
+
+    <div class="container p-1 my-1">
+        <p class="submitFormHelp alert alert-info">
+        Items in Faculty Publication Repository are protected by copyright, with
+        all rights reserved, unless otherwise indicated.
+        </p>
+    </div>
+
+<script>
+    function confirmDelete() {
+        let text = "Are you sure Deleting the paper?";
+        if (confirm(text) == true) {
+            window.location = "{{ url_for('delete_paper', id=paper.id) }}";
+            // text = "You pressed OK!";
+        } else {
+            // text = "You canceled!";
+        }
+    }
+</script>
+{% endblock content %}

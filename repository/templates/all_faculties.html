@@ -1,0 +1,91 @@
+{% extends "base2.html" %}
+{% block content %}
+
+<style>
+    .card {
+        width: 20rem;
+        margin: 2rem;
+        /* box-shadow: 10px 10px 30px grey; */
+    }
+
+    .card:hover {
+        transition: .5s;
+        box-shadow: 10px 10px 30px grey;
+        /* width: 20.5rem; */
+    }
+</style>
+
+<br><br>
+<div class="container-fluid faculty-container">
+    <div class="container">
+        <h2>Filter Authors</h2>
+        <form action="{{ url_for('all_faculties') }}" method="get">
+            <div class="form-group">
+                <label for="author">Author name:</label>
+                <input type="text" name="author" class="form-control" value="{{ request.args.get('author') or '' }}">
+            </div>
+
+            <div class="form-group">
+                <label for="university">University:</label>
+                <input type="text" name="university" class="form-control" value="{{ request.args.get('university') or '' }}">
+            </div>
+
+            <input type="submit" value="Search" class="btn btn-info">
+        </form>
+    </div>
+
+    <div class="row">
+        {% for faculty in faculties.items %}
+            <div class="col-md-3">
+                <div class="card">
+                    <img class="card-img-top" src="{{ faculty.get_profile_image_url() }}" style="min-height: 318px; max-height: 318px;" alt="">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ faculty.fname + " " + faculty.lname }}</h5>
+                        {% if faculty.faculty.about_me %}
+                            <p class="card-text text-muted">{{ faculty.faculty.about_me[:100] + "..." }}</p>
+                        {% endif %}
+                        <a href="{{ url_for('faculty_profile', id=faculty.id) }}" class="btn btn-success btn-sm">View Profile</a>
+                        <!-- <a href="" class="btn btn-outline-danger btn-sm"><i class="far fa-heart"></i></a> -->
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+
+<div class="container-fluid">
+    <ul class="pagination">
+        {% for page_num in faculties.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+            {% if page_num %}
+                {% if faculties.page == page_num %}
+                    <!-- <a href="{{ url_for('all_faculties', page=page_num) }}" class="btn btn-info">{{ page_num }}</a> -->
+                    <li class="page-item active"><a href="{{ url_for('all_faculties', page=page_num) }}" class="page-link">{{ page_num }}</a></li>
+                {% else %}
+                    <!-- <a href="{{ url_for('all_faculties', page=page_num) }}" class="btn btn-outline-info">{{ page_num }}</a> -->
+                    <li class="page-item"><a href="{{ url_for('all_faculties', page=page_num) }}" class="page-link">{{ page_num }}</a></li>
+                {% endif %}
+            {% else %}
+                ...
+            {% endif %}
+        {% endfor %}
+    </ul>
+</div>
+
+<!-- <nav aria-label="...">
+    <ul class="pagination">
+        <li class="page-item disabled">
+            <a class="page-link" href="#" tabindex="-1">Previous</a>
+        </li>
+        <li class="page-item"><a class="page-link" href="#">1</a></li>
+        <li class="page-item active">
+            <a class="page-link" href="#">2 <span class="sr-only">(current)</span></a>
+        </li>
+        <li class="page-item"><a class="page-link" href="#">3</a></li>
+        <li class="page-item">
+            <a class="page-link" href="#">Next</a>
+        </li>
+    </ul>
+</nav> -->
+
+{% endblock %}

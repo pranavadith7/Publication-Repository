@@ -1,0 +1,137 @@
+{% extends "base2.html" %} {% block content %}
+<!-- Jumbotron -->
+<div class="jumbotron">
+    <div class="container">
+        <br />
+        <h2>Faculty Publication Repository</h2>
+        <p>
+            The research work of a faculty belonging to a particular institution
+            needs to be recorded and maintained which can be helpful for the
+            faculties and the students who are working on projects in the same
+            field. In-order to store the publications along with their patent,
+            we need some kind of storage space where different people can see
+            the publications posted by professionals.
+        </p>
+        <p>
+            <a class="btn btn-primary btn-lg" href="/" role="button"
+                >Learn more »</a
+            >
+        </p>
+    </div>
+</div>
+
+<div class="container">
+    <form action="" method="get">
+        <div class="container">
+            <h2>Browse by Author</h2>
+            <div class="input-group mb-3">
+                <input
+                    type="text"
+                    class="form-control"
+                    placeholder="Author Name"
+                    aria-label="Recipient's username"
+                    aria-describedby="basic-addon2"
+                    name="author"
+                />
+                <div class="input-group-append">
+                    <input
+                        class="btn btn-success"
+                        type="submit"
+                        value="Search"
+                    />
+                </div>
+            </div>
+        </div>
+        <br />
+        <div class="container">
+            <div class="row">
+                <h4>&nbsp;</h4>
+                <h4>&nbsp;</h4>
+                <h4>Order :</h4>
+                <h4>&nbsp;</h4>
+                <div class="btn-group">
+                    <select
+                        class="form-control"
+                        aria-label=".form-select-sm example"
+                        name="order"
+                    >
+                        <option selected value="asc">Ascending</option>
+                        <option value="desc">Descending</option>
+                    </select>
+                </div>
+                <h4>&nbsp;</h4>
+                <h4>&nbsp;</h4>
+                <h4>&nbsp;</h4>
+                <h4>Results Per Page :</h4>
+                <h4>&nbsp;</h4>
+                <select
+                    class="form-control"
+                    style="width: 4rem"
+                    aria-label=".form-select-sm example"
+                    name="per_page"
+                >
+                    <option selected>10</option>
+                    <option value="15">15</option>
+                    <option value="20">20</option>
+                    <option value="25">25</option>
+                </select>
+                <h4>&nbsp;</h4>
+                <h4>&nbsp;</h4>
+                <h4>&nbsp;</h4>
+                <h4>&nbsp;</h4>
+
+                <input class="btn btn-success" type="submit" value="Submit" />
+            </div>
+        </div>
+    </form>
+</div>
+
+<br />
+
+<div class="container">
+    <table class="table">
+        <thead class="thead-dark">
+            <tr>
+                <th>Author(s)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for author in authors.items %}
+            <tr>
+                <td><a href="{{ url_for('faculty_profile', id=author.id) }}">{{ author.fname + " " + author.lname }}</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<br />
+
+<div class="container" style="display: flex; justify-content: center;">
+    <ul class="pagination">
+        {% for page_num in authors.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %} 
+            {% if page_num %} 
+                {% if authors.page== page_num %}
+                <li class="page-item active">
+                    <a
+                        href="{{ url_for('filter_title', page=page_num,title=title_q,mode=mode,per_page=per_page_q) }}"
+                        class="page-link"
+                        >{{ page_num }}</a
+                    >
+                </li>
+                {% else %}
+                <li class="page-item">
+                    <a
+                        href="{{ url_for('filter_title', page=page_num, title=title_q, mode=mode, per_page=per_page_q) }}"
+                        class="page-link"
+                        >{{ page_num }}</a
+                    >
+                </li>
+                {% endif %} 
+            {% else %} 
+                ... 
+            {% endif %} 
+        {% endfor %}
+    </ul>
+</div>
+{% endblock content %}

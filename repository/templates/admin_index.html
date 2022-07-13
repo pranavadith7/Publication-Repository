@@ -1,0 +1,150 @@
+{% extends 'admin/master.html' %}
+{% block body %}
+
+<link
+    rel="stylesheet"
+    type="text/css"
+    href="{{ url_for('static', filename='css/index.css') }}"
+/>
+
+<style>
+    /* Accordion */
+.accordion-toggle:hover {
+  text-decoration: none;
+}
+
+.panel-default > .panel-heading {
+  color: #fff;
+  background-color: #73000A;
+  border-color: #73000A;
+}
+</style>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<div class="container">
+    <!-- <h1>A simple accordion</h1> -->
+
+    <div class="row">
+        <div class="col-md-6 col-sm-6">
+            <h3>Departments in the repository</h3>
+            <span>Choose a Department to browse its Areas.</span>
+            <div class="panel-group" id="accordion">
+                {% for department in departments %}
+                    <div class="panel panel-default">
+                        {% if loop.index0 == 0 %}
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a
+                                        class="accordion-toggle"
+                                        data-toggle="collapse"
+                                        data-parent="#accordion"
+                                        href="#collapse{{ department.id }}"
+                                    >
+                                        <span class="glyphicon glyphicon-minus"></span> {{ department.name }}
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="collapse{{ department.id }}" class="panel-collapse collapse in">
+                                <div class="panel-body">
+                                    <ul class="list-unstyled">
+                                        {% for department_area in department.department_areas %}
+                                            <li><a href="{{ url_for('all_departments', id=department_area.id) }}">{{ department_area.name }}</a></li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                        {% else %}
+
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a
+                                        class="accordion-toggle"
+                                        data-toggle="collapse"
+                                        data-parent="#accordion"
+                                        href="#collapse{{ department.id }}"
+                                    >
+                                        <span class="glyphicon glyphicon-plus"></span> {{ department.name }}
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="collapse{{ department.id }}" class="panel-collapse collapse">
+                                <div class="panel-body">
+                                    <ul class="list-unstyled">
+                                        {% for department_area in department.department_areas %}
+                                            <li><a href="{{ url_for('all_departments', id=department_area.id) }}">{{ department_area.name }}</a></li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <br />
+            <h3>Author</h3>
+            <!-- <br /> -->
+            <div class="list-group">
+                {% for author in authors.items %}
+                    <a href="{{ url_for('faculty_profile', id=author[0].id) }}" class="list-group-item list-group-item-action">
+                        {{ author[0].fname + " " + author[0].lname }}
+                        <span class="badge badge-pill badge-dark float-right mr-2">
+                            {{ author[1] }}
+                        </span>
+                    </a>
+                {% endfor %}
+
+                <br>
+                <ul class="pagination">
+                    {% for page_num in authors.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+                        {% if page_num %}
+                            {% if authors.page == page_num %}
+                            <li class="page-item active">
+                                <a
+                                    href="{{ url_for('admin.index', author_page=page_num) }}"
+                                    class="page-link"
+                                    >{{ page_num }}</a
+                                >
+                            </li>
+                            {% else %}
+                            <li class="page-item">
+                                <a
+                                    href="{{ url_for('admin.index', author_page=page_num) }}"
+                                    class="page-link"
+                                    >{{ page_num }}</a
+                                >
+                            </li>
+                            {% endif %}
+                        {% else %}
+                            ...
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<br />
+
+<script>
+    $(document).ready(function () {
+        $(".collapse")
+            .on("shown.bs.collapse", function () {
+                $(this)
+                    .parent()
+                    .find(".glyphicon-plus")
+                    .removeClass("glyphicon-plus")
+                    .addClass("glyphicon-minus");
+            })
+            .on("hidden.bs.collapse", function () {
+                $(this)
+                    .parent()
+                    .find(".glyphicon-minus")
+                    .removeClass("glyphicon-minus")
+                    .addClass("glyphicon-plus");
+            });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,346 @@
+{% extends "base2.html" %}
+{% block content %}
+<script src="https://cdn.jsdelivr.net/remarkable/1.7.1/remarkable.min.js"></script>
+<style>
+    .avatar {
+        /* vertical-align: middle; */
+        width: 300px;
+        height: 300px;
+        border-radius: 52%;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 5px;
+    }
+    .p1{
+        font-family: Arial, Helvetica, sans-serif;font-size:42px;font-weight:Bold;
+    }
+    .p2{
+        font-family: "Trebuchet MS", Verdana, sans-serif;font-size:30px;font-weight:normal;
+    }
+    .p3{
+        font-family: "Trebuchet MS", Verdana, sans-serif;font-size:28px;font-style: italic;
+    }
+    .block {
+        display: block;
+        width: 100%;
+        border: none;
+        background-color:#5B5757;
+        padding: 14px 28px;
+        font-size: 20px;
+        cursor: pointer;
+        text-align: center;
+        color:white;
+        font-family:Arial;
+    }
+
+    .block:hover {
+        background-color:#918E8E;
+        color: black;
+        text-decoration: none;
+    }
+    .fa-edit-btn:hover {
+        cursor: pointer;
+    }
+</style>
+
+
+<div class="container-fluid">
+    <br><br>
+    <div class="row">
+        <div class="col-3 bg-light">
+            <div>
+
+                <img src="{{ user.get_profile_image_url(300) }}" alt="Avatar" class="avatar"><br><br>
+                <div class="card-body">
+                    <p class="p1">
+                        {{ user.fname + " " + user.lname }}
+                    </p>
+                    <p class="p2">
+                        {{ user.faculty.designation }}
+                    </p>
+                    <p class="p3">
+                        {{ user.faculty.department }}
+                    </p>
+                    <br>
+                    {% if current_user.is_authenticated and current_user.id == user.id %}
+                        <a style="text-decoration:none;" href="{{ url_for('faculty_edit_profile', id=user.id) }}" >
+                            <button type="button" class="block">Edit Profile</button>
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Centre details -->
+
+        <div class="col-6 bg-light border-right border-left">
+            <div class="row">
+                <div class="col" style="text-align:center; background-color: #bbb;" id="personal-tab">
+                    <h5>
+                        <!-- <button type="button" class="centre" onclick = "showPersonal()">Personal Info</button> -->
+                        <button type="button" class="btn btn-link text-dark" onclick = "showPersonal()" style="font-size:22px; font-family:verdana;">Personal Info</button>
+                    </h5>
+                </div>
+                <div class="col" style="text-align:center;" id="publish-tab">
+                    <h5>
+                    <!-- <button type="button" class="centre" onclick = "showPaper()">Publications</button> -->
+                    <button type="button" class="btn btn-link text-dark" onclick = "showPaper()" style="font-size:22px; font-family:verdana">My Publications</button>
+                    </h5>
+                </div>
+                <div class="col" style="text-align:center;" id="pending-tab">
+                    <h5>
+                    <!-- <button type="button" class="centre" onclick = "showPaper()">Publications</button> -->
+                    <button type="button" class="btn btn-link text-dark" onclick = "showPending()" style="font-size:22px; font-family:verdana">Pending Approval</button>
+                    </h5>
+                </div>
+            </div>
+
+            <!-- Page 1 -->
+            <div id="personal" style="display:block; padding: 0px 30px;">
+                <!-- About me -->
+                <p>
+                    <hr>
+                    <h2>About Me</h2>
+                    <p>{{ user.faculty.about_me }}</p>
+                </p>
+                <!-- About Me -->
+
+
+                <!--Work Experience -->
+                <p>
+                    <h2>Work Experience</h2>
+                    <p>{{ user.faculty.work_exp }}</p>
+                </p>
+                <!-- Work Experience -->
+
+                <!-- Currently Working Papers -->
+                <p>
+                    <h2>Currently Working Papers {% if current_user.is_authenticated and current_user.id == user.id %}<span class="fa-edit-btn" data-toggle="modal" data-target="#exampleModal"><i class="fas fa-edit"></i></span>{% endif %}</h2>
+                    {% if current_user.faculty and current_user.faculty.currently_working %}
+                        <p id="current-working-content">{{ current_user.faculty.currently_working }}</p>
+                    {% else %}
+                        <p>-</p>
+                    {% endif %}
+
+                </p>
+                <!-- Currently Working Papers -->
+
+                <!-- Modal -->
+                <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Enter Currently Working Papers</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form action="{{ url_for('update_current_working_paper') }}" method="post">
+                                    <label for="currently_working">Supports MARKDOWN</label>
+                                    <textarea name="currently_working" id="currently_working" cols="30" rows="3" class="form-control">{{ user.faculty.currently_working }}</textarea>
+                                    <br>
+                                    <button type="submit" class="btn btn-primary">Save changes</button>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!--
+                    ence Attended -->
+                <p>
+                    <h2>Conference Attended {% if current_user.is_authenticated and current_user.id == user.id %}<span class="fa-edit-btn" data-toggle="modal" data-target="#exampleModal1"><i class="fas fa-edit"></i></span>{% endif %}</h2>
+                    {% if current_user.faculty and current_user.faculty.conference_attended %}
+                        <p id="conference-attended-content">{{ current_user.faculty.conference_attended }}</p>
+                    {% else %}
+                        <p>-</p>
+                    {% endif %}
+
+                </p>
+                <!-- Conference Attended -->
+
+                <!-- Modal -->
+                <div class="modal fade" id="exampleModal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Enter Conference Attended</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form action="{{ url_for('update_conference_attended') }}" method="post">
+                                    <label for="update_conference_attended">Supports MARKDOWN</label>
+                                    <textarea name="conference_attended" id="update_conference_attended" cols="30" rows="3" class="form-control">{{ user.faculty.conference_attended }}</textarea>
+                                    <br>
+                                    <button type="submit" class="btn btn-primary">Save changes</button>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <hr>
+                <table>
+                    <!-- LinkedIn -->
+                    <tr>
+                        <td><i class="fab fa-linkedin"></i></td>
+                        {% if user.faculty.linkedin %}
+                        <td><a href="{{ user.faculty.linkedin }}">Linked.in</a></td>
+                        {% else %}
+                        <td>-</td>
+                        {% endif %}
+                    </tr>
+                    <!--LinkedIn -->
+
+                    <!-- Github -->
+                    <tr>
+                        <td><i class="fab fa-github"></i></td>
+                        {% if user.faculty.github %}
+                            <td><a href="{{ user.faculty.github }}">Linked.in</a></td>
+                        {% else %}
+                            <td>-</td>
+                        {% endif %}
+                    </tr>
+                    <!-- Github -->
+
+                </table>
+            </div>
+            <!-- Page 1 -->
+
+            <!--Page 2 -->
+            <div id="publish" style="display:none; padding:0px 30px;">
+                {% for paper in user.authorized_publications() %}
+                    <div>
+                        <hr>
+                        <h2>Title: <a href="{{ url_for('view_paper', id=paper.id) }}">{{ paper.title }}</a></h2>
+                    </div>
+                    <div>
+                        <p><strong>PaperId: </strong> {{ paper.unique_paper_id }}</p>
+                    </div>
+                    <div>
+                        <p> <span><strong>Abstract: </strong></span> {{ paper.abstract }}</p>
+                    </div>
+                {% endfor %}
+            </div>
+            <!--Page 2 -->
+
+            <!--Page 3 -->
+            <div id="pending" style="display:none; padding:0px 30px;">
+                {% for paper in user.pending_publications() %}
+                    <div>
+                        <hr>
+                        <h2>Title: <a href="{{ url_for('view_paper', id=paper.id) }}">{{ paper.title }}</a></h2>
+                    </div>
+                    <div>
+                        <p><strong>PaperId: </strong> {{ paper.unique_paper_id }}</p>
+                    </div>
+                    <div>
+                        <p> <span><strong>Abstract: </strong></span> {{ paper.abstract }}</p>
+                    </div>
+                {% endfor %}
+
+
+            </div>
+            <!--Page 3 -->
+        </div>
+
+        <!--Centre details -->
+
+        <div class="col-3 bg-light" style="padding-left:40px;"><br>
+            <h2 style="font-family:tahoma; display: inline-block;">
+                <i class="fas fa-id-badge"></i>&nbsp;
+                <span>#{{ user.id }}</span>
+            </h2>
+            <br><br><br>
+
+            <h2 style="font-family:tahoma; display: inline-block;">
+                <i class="fas fa-envelope"></i>&nbsp;
+            </h2>
+            <span>{{ user.email }}</span>
+            <br><br><br>
+
+            <h2 style="font-family:tahoma; display: inline-block;">
+                <i class="fas fa-phone"></i>&nbsp;
+            </h2>
+            {% if user.faculty.phone_number %}
+            <span>{{ user.faculty.phone_number }}</span>
+            <br><br><br>
+            {% else %}
+            <br><br><br>
+            {% endif %}
+
+                <h2 style="font-family:tahoma; display: inline-block;">
+                    <i class="fas fa-map-marker-alt"></i>&nbsp;
+                </h2>
+            {% if user.faculty.address %}
+                <span>{{ user.faculty.address }}</span>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- <footer> -->
+<!-- <div class="container-fluid dark">
+    <center>
+        <h6 style="padding: 10px; margin-bottom: 0.05rem">
+            <footer>&copy; Copyright 2022. All rights reserved.</footer>
+        </h6>
+    </center>
+</div> -->
+
+<script type="text/javascript">
+    function showPaper(){
+        document.getElementById("personal").style.display= "none";
+        $('#personal-tab').css( "background-color", "");
+        document.getElementById("pending").style.display= "none";
+        $('#pending-tab').css( "background-color", "");
+        document.getElementById("publish").style.display = "block";
+        $('#publish-tab').css( "background-color", "#bbb");
+    }
+    function showPersonal(){
+        document.getElementById("personal").style.display= "block";
+        $('#personal-tab').css( "background-color", "#bbb");
+        document.getElementById("publish").style.display = "none";
+        $('#publish-tab').css( "background-color", "");
+        document.getElementById("pending").style.display= "none";
+        $('#pending-tab').css( "background-color", "");
+    }
+    function showPending(){
+        document.getElementById("personal").style.display= "none";
+        $('#personal-tab').css( "background-color", "");
+        document.getElementById("publish").style.display = "none";
+        $('#publish-tab').css( "background-color", "");
+        document.getElementById("pending").style.display= "block";
+        $('#pending-tab').css( "background-color", "#bbb");
+    }
+</script>
+
+<script>
+    var md = new Remarkable();
+
+    // $("#current-working-content")
+    $(window).ready(function() {
+        let wCont = $("#current-working-content").html();
+        $("#current-working-content").html(md.render(wCont));
+
+        let confCont = $("#conference-attended-content").html();
+        $("#conference-attended-content").html(md.render(confCont));
+    });
+
+    // $('conference-attended-content')
+</script>
+
+{% endblock %}

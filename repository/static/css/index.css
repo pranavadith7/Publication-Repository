@@ -1,0 +1,106 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+.grid-container {
+display: grid;
+grid-template-columns: 300px auto;
+grid-gap: 30px;
+background-color: #010001;
+padding: 10px;
+text-align: center;
+box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset,
+    rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset;
+}
+.grid-container-opp {
+display: grid;
+grid-template-columns: auto 300px;
+grid-gap: 50px;
+background-color: #010001;
+padding: 20px;
+text-align: center;
+box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset,
+    rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset;
+}
+
+/* .grid-container > div {
+background-color: #F1F1F1;
+text-align: center;
+font-size: 30px;
+padding: 95px 30px 10px 40px;
+} */
+
+.circle {
+border-radius: 50%;
+width: 6em;
+height: 6em;
+text-align: center;
+justify-content: center;
+line-height: 0;
+padding: 145px 30px 10px 40px;
+background-color: #f1f1f1;
+font-size: 50px;
+font-family: fantasy;
+box-shadow: rgba(0, 0, 0, 0.17) 5px -23px 25px 0px inset,
+    rgba(0, 0, 0, 0.15) 0px -36px 30px 0px inset,
+    rgba(0, 0, 0, 0.1) 0px -79px 40px 0px inset, rgba(0, 0, 0, 0.06) 0px 2px 1px,
+    rgba(0, 0, 0, 0.09) 0px 4px 2px, rgba(0, 0, 0, 0.09) 0px 8px 4px,
+    rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 32px 16px;
+}
+
+.content {
+background-color: #f1f1f1;
+text-align: center;
+font-size: 30px;
+padding: 15px;
+box-shadow: rgba(255, 255, 0, 0.5) 5px 5px, rgba(255, 240, 0, 0.4) 10px 10px,
+    rgba(255, 230, 0, 0.3) 15px 15px, rgba(255, 220, 0, 0.1) 20px 20px,
+    rgba(255, 255, 170, 0.05) 25px 25px;
+}
+
+.about {
+background-color: #e6e6e6;
+}
+
+.services {
+background-color: black;
+color: white;
+}
+
+.dark {
+background-color: black;
+color: white;
+}
+
+.hov:hover {
+color: #343334;
+background-color: red;
+}
+
+.stroke a,
+.fill a {
+position: relative;
+}
+.stroke a:after,
+.fill a:after {
+position: absolute;
+bottom: 0;
+left: 0;
+right: 0;
+margin: auto;
+width: 0%;
+content: ".";
+color: transparent;
+background: #f8f001;
+height: 1px;
+}
+.stroke a:hover:after {
+width: 100%;
+}
+.black {
+position: fixed;
+top: 0;
+background: black;
+width: 100%;
+height: 50px;
+}

@@ -1,0 +1,7 @@
+venv/
+__pycache__/*
+.flaskenv
+__pycache__/
+.scannerwork/
+test-reports/
+.pytest_cache/

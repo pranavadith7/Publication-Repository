@@ -1,0 +1,136 @@
+{% extends "base2.html" %} {% block content %}
+
+<!-- Jumbotron -->
+<div class="jumbotron">
+    <div class="container">
+        <br />
+        <h2>Faculty Publication Repository</h2>
+        <p>
+            The research work of a faculty belonging to a particular institution
+            needs to be recorded and maintained which can be helpful for the
+            faculties and the students who are working on projects in the same
+            field. In-order to store the publications along with their patent,
+            we need some kind of storage space where different people can see
+            the publications posted by professionals.
+        </p>
+        <p>
+            <a class="btn btn-primary btn-lg" href="/" role="button">Learn more »</a>
+        </p>
+    </div>
+</div>
+
+<br />
+<div class="container">
+    <form method="get">
+        <div class="form-group">
+            <label for="formControlRange">Select Year</label>
+            <input
+                type="range"
+                name="year"
+                class="form-control-range"
+                oninput="$('#rangeval').html($(this).val())"
+                id="formControlRange"
+                min="1950"
+                max="2022"
+                value="{{ year_q }}"
+            />
+            <span id="rangeval">{{ year_q }}</span>
+        </div>
+        <input class="btn btn-info" type="submit" value="Submit" />
+    </form>
+
+    <h2>
+        Chosen Date &nbsp;
+        <span class="badge badge-pill badge-dark mr-2">{{ year_q }}</span>
+    </h2>
+    <br />
+    <br />
+    <div class="row">
+        <div
+            class="col-2 bg-dark text-center"
+            style="height: 45px; color: white; font-size: 20px"
+        >
+            <b>Issue Date</b>
+        </div>
+        <div
+            class="col-7 bg-dark text-center"
+            style="height: 45px; color: white; font-size: 20px"
+        >
+            <b>Title</b>
+        </div>
+        <div
+            class="col-3 bg-dark text-center"
+            style="height: 45px; color: white; font-size: 20px"
+        >
+            <b>Author(s)</b>
+        </div>
+    </div>
+    <br />
+
+    {% for paper_title in papers.items %}
+    <div class="row">
+        <div
+            class="col-2 bg-light text-center"
+            style="height: 40px; font-size: 16px"
+        >
+            {{ paper_title.published_year }}
+        </div>
+
+        <div
+            class="col-7 bg-light text-center"
+            style="word-wrap: break-word;min-width: 160px;max-width: 50rem;"
+        >
+            <a href="{{ url_for('view_paper', id=paper_title.id) }}" style="display: inline-block;">{{ paper_title.title }}</a>
+        </div>
+
+        <div
+            class="col-3 bg-light text-center"
+            style="height: 40px; font-size: 16px"
+        >
+            <ul style="list-style-type: none; display: block;">
+                {% for author in paper_title.authors %}
+                    {% if author.faculty %}
+                        <li>
+                            <a href="{{ url_for('faculty_profile', id=author.id) }}"
+                                >{{ author.fname + " " + author.lname }}</a
+                            >
+                        </li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    <br>
+    {% endfor %}
+</div>
+
+<br />
+
+<div class="container" style="display: flex; justify-content: center">
+    <ul class="pagination">
+        {% for page_num in papers.iter_pages(left_edge=1, right_edge=1,left_current=1, right_current=2) %}
+            {% if page_num %}
+                {% if papers.page == page_num %}
+                <li class="page-item active">
+                    <a
+                        href="{{ url_for('filter_year', page=page_num, year=year_q, per_page=per_page_q) }}"
+                        class="page-link"
+                        >{{ page_num }}</a
+                    >
+                </li>
+                {% else %}
+                <li class="page-item">
+                    <a
+                        href="{{ url_for('filter_year', page=page_num, year=year_q, per_page=per_page_q) }}"
+                        class="page-link"
+                        >{{ page_num }}</a
+                    >
+                </li>
+                {% endif %}
+            {% else %}
+                ...
+            {% endif %}
+        {% endfor %}
+    </ul>
+</div>
+{% endblock content %}

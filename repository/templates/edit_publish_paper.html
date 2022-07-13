@@ -1,0 +1,50 @@
+{% extends 'base2.html' %}
+
+{% from "_formhelpers.html" import render_field %}
+
+{% block content %}
+    <br><br>
+    <div class="container">
+        <h1>Edit Publish Paper</h1>
+        <form action="" method="post" enctype="multipart/form-data">
+            {{ form.hidden_tag() }}
+            {{ render_field(form.title) }}
+            {{ render_field(form.abstract) }}
+            {{ render_field(form.paper_type) }}
+            {# render_field(form.department_area) #}
+            {{ form.department_area.label(class="form-control-label") }}
+            {% if form.department_area.errors %}
+                {# form.department_area(class="form-control is-invalid") #}
+                {{ form.department_area(class="form-control dept-area-grp", style="border-color: red;", **kwargs)|safe }}
+
+
+                <div class="invalid-feedback">
+                    {% for error in form.department_area.errors %}
+                        <span style="color: red;">{{ error }}</span>
+                    {% endfor %}
+                </div>
+            {% else %}
+                {#  form.department_area(class="form-control dept-area-grp")  #}
+                {{ form.department_area(class="form-control dept-area-grp") }}
+
+            {% endif %}
+            <br><br>
+            {{ render_field(form.authors, class="form-control multiple-input") }}
+            {{ render_field(form.citations, class="form-control multiple-input-citations") }}
+            {{ render_field(form.publisher) }}
+            {{ render_field(form.published_year) }}
+            {{ render_field(form.paper_file) }}
+            {{ render_field(form.access) }}
+            <div class="form-group">
+                {{ form.submit(class="btn btn-info") }}
+            </div>
+        </form>
+    </div>
+    <script type="text/javaScript">
+        $(document).ready(function() {
+            $('.multiple-input').select2();
+            $('.dept-area-grp').select2();
+            $('.multiple-input-citations').select2();
+        });
+    </script>
+{% endblock %}

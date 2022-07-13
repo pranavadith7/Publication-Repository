@@ -1,0 +1,316 @@
+{% extends "base2.html" %}
+{% block content %}
+<div class="container rounded bg-white mt-5">
+    <div class="row">
+            <div class="col-md-4 border-right">
+                <div class="d-flex flex-column align-items-center text-center p-3 py-5">
+                    <!-- <img
+                        class="rounded-circle mt-5"
+                        src="https://cdn.glitch.global/cb0fb47f-a8c0-49d2-8f79-c86bc78b762a/img_avatar.png?v=1647488984248"
+                        width="90"
+                    /> -->
+                    {% if image_file %}
+                        <img class="rounded-circle mt-5" id="live-img-file" width="120" height="120" src="{{ image_file }}">
+                    {% else %}
+                        <img
+                            class="rounded-circle mt-5"
+                            src="https://cdn.glitch.global/cb0fb47f-a8c0-49d2-8f79-c86bc78b762a/img_avatar.png?v=1647488984248"
+                            height="120"
+                            width="120"
+                            id="live-img-file"
+                        />
+                    {% endif %}
+
+                    <span class="font-weight-bold">{{ current_user.fname + " " + current_user.lname }}</span><span class="text-black-50">{{ current_user.email }}</span>
+                    <span class="font-weight-bold">Institution</span>
+                    <span>{{ current_user.institution.name }}</span>
+
+                    <span><a href="{{ url_for('change_password') }}">Change Password</a></span>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="p-3 py-5">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div class="d-flex flex-row align-items-center back">
+                            <i class="fas fa-arrow-circle-left"></i>
+                            <a style="text-decoration: none; color: #2e2d31" href="{{ url_for('faculty_profile', id=current_user.id) }}">
+                                <h7> Back to Profile</h7>
+                            </a>
+                        </div>
+                        <h6 class="text-right">Edit Profile</h6>
+                    </div>
+
+                    <form action="" method="post" enctype="multipart/form-data">
+                        {{ fedit_form.hidden_tag() }}
+                        <div class="row mt-2">
+                            <!-- <div class="col-md-6"><input type="text" class="form-control" placeholder="first name" value="Faculty first name"></div> -->
+                            <div class="col-md-6 input-group">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">First Name</div>
+                                </div>
+                                <!-- <input type="text" class="form-control" id="inlineFormInputGroupUsername2" placeholder="Username"> -->
+                                <!-- <input type="text" class="form-control" placeholder="first name" value="Faculty first name" /> -->
+                                {% if fedit_form.fname.errors %}
+                                    {{ fedit_form.fname(class="form-control", placeholder='First Name', style="border-color: red;")|safe }}
+                                    <div class="invalid-feedback">
+                                        {% for error in fedit_form.fname.errors %}
+                                            <span style="color: red;">{{ error }}</span>
+                                        {% endfor %}
+                                    </div>
+                                {% else %}
+                                    {{ fedit_form.fname(class="form-control", placeholder='First Name') }}
+                                {% endif %}
+                            </div>
+
+                            <!-- <div class="col-md-6"><input type="text" class="form-control" value="Faculty last name" placeholder="last name"></div> -->
+                            <div class="col-md-6 input-group">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">Last Name</div>
+                                </div>
+                                <!-- <input type="text" class="form-control" id="inlineFormInputGroupUsername2" placeholder="Username"> -->
+                                <!-- <input type="text" class="form-control" placeholder="first name" value="Faculty first name"> -->
+                                <!-- <input type="text" class="form-control" value="Faculty last name" placeholder="last name" /> -->
+                                {% if fedit_form.lname.errors %}
+                                    {{ fedit_form.lname(class="form-control", placeholder='Last Name', style="border-color: red;")|safe }}
+                                    <div class="invalid-feedback">
+                                        {% for error in fedit_form.lname.errors %}
+                                            <span style="color: red;">{{ error }}</span>
+                                        {% endfor %}
+                                    </div>
+                                {% else %}
+                                    {{ fedit_form.lname(class="form-control", placeholder='Last Name') }}
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="row mt-3">
+                            <div class="col-md-6 input-group">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">
+                                        <i class="fas fa-envelope"></i>
+                                    </div>
+                                </div>
+                                <!-- <input type="text" class="form-control" placeholder="Email" value="email@gmail.com" /> -->
+                                {% if fedit_form.email.errors %}
+                                    {{ fedit_form.email(class="form-control", placeholder='Email', style="border-color: red;")|safe }}
+                                    <div class="invalid-feedback">
+                                        {% for error in fedit_form.email.errors %}
+                                            <span style="color: red;">{{ error }}</span>
+                                        {% endfor %}
+                                    </div>
+                                {% else %}
+                                    {{ fedit_form.email(class="form-control", placeholder='Email') }}
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6 input-group">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">
+                                        <i class="fas fa-phone"></i>
+                                    </div>
+                                </div>
+                                <!-- <input type="text" class="form-control" value="+19685969668" placeholder="Phone number" /> -->
+                                {% if fedit_form.phone_number.errors %}
+                                    {{ fedit_form.phone_number(class="form-control", placeholder='Phone Number', style="border-color: red;")|safe }}
+                                    <div class="invalid-feedback">
+                                        {% for error in fedit_form.phone_number.errors %}
+                                            <span style="color: red;">{{ error }}</span>
+                                        {% endfor %}
+                                    </div>
+                                {% else %}
+                                    {{ fedit_form.phone_number(class="form-control", placeholder='Phone Number') }}
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="row mt-3">
+                            <div class="col-md-6 input-group">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                    </div>
+                                </div>
+                                <!-- <input
+                                    type="text"
+                                    class="form-control"
+                                    placeholder="address"
+                                    value="A-1,Second street,Amrita Vishwa Vidyapeetham"
+                                /> -->
+                                {% if fedit_form.address.errors %}
+                                    {{ fedit_form.address(class="form-control", placeholder='Address', style="border-color: red;")|safe }}
+                                    <div class="invalid-feedback">
+                                        {% for error in fedit_form.address.errors %}
+                                            <span style="color: red;">{{ error }}</span>
+                                        {% endfor %}
+                                    </div>
+                                {% else %}
+                                    {{ fedit_form.address(class="form-control", placeholder='Address') }}
+                                {% endif %}
+                            </div>
+
+                            <div class="col-md-6 input-group">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">
+                                        <!-- <i class="fas fa-globe"></i> -->
+                                        <!-- <i class="fas fa-user-hard-hat"></i> -->
+                                        <i class="fas fa-building"></i>
+                                    </div>
+                                </div>
+                                <!-- <input type="text" class="form-control" value="India" placeholder="Country" /> -->
+                                {% if fedit_form.work_exp.errors %}
+                                    {{ fedit_form.work_exp(class="form-control", placeholder='Work Experience', style="border-color: red;")|safe }}
+                                    <div class="invalid-feedback">
+                                        {% for error in fedit_form.work_exp.errors %}
+                                            <span style="color: red;">{{ error }}</span>
+                                        {% endfor %}
+                                    </div>
+                                {% else %}
+                                    {{ fedit_form.work_exp(class="form-control", placeholder='Work Experience') }}
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="row mt-3">
+                            <div class="col-md-6 input-group">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">Designation</div>
+                                </div>
+                                <!-- <input type="text" class="form-control" placeholder="Designation" value="Designation" /> -->
+                                {% if fedit_form.designation.errors %}
+                                    {{ fedit_form.designation(class="form-control", placeholder='Designation', style="border-color: red;")|safe }}
+                                    <div class="invalid-feedback">
+                                        {% for error in fedit_form.designation.errors %}
+                                            <span style="color: red;">{{ error }}</span>
+                                        {% endfor %}
+                                    </div>
+                                {% else %}
+                                    {{ fedit_form.designation(class="form-control", placeholder='Designation') }}
+                                {% endif %}
+                            </div>
+
+                            <div class="col-md-6 input-group">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">Department</div>
+                                </div>
+                                <!-- <input type="text" class="form-control" value="Department" placeholder="Dep" /> -->
+                                {% if fedit_form.department.errors %}
+                                    {{ fedit_form.department(class="form-control", placeholder='Department', style="border-color: red;")|safe }}
+                                    <div class="invalid-feedback">
+                                        {% for error in fedit_form.work_exp.errors %}
+                                            <span style="color: red;">{{ error }}</span>
+                                        {% endfor %}
+                                    </div>
+                                {% else %}
+                                    {{ fedit_form.department(class="form-control", placeholder='Work Experience') }}
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="row mt-3">
+                            <div class="col-md-6 input-group">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text"><i class="fab fa-github"></i></div>
+                                </div>
+                                <!-- <input type="text" class="form-control" placeholder="Designation" value="Designation" /> -->
+                                {% if fedit_form.github.errors %}
+                                    {{ fedit_form.github(class="form-control", placeholder='https://github.com/username', style="border-color: red;")|safe }}
+                                    <div class="invalid-feedback">
+                                        {% for error in fedit_form.github.errors %}
+                                            <span style="color: red;">{{ error }}</span>
+                                        {% endfor %}
+                                    </div>
+                                {% else %}
+                                    {{ fedit_form.github(class="form-control", placeholder='https://github.com/username') }}
+                                {% endif %}
+                            </div>
+
+                            <div class="col-md-6 input-group">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text"><i class="fab fa-linkedin"></i></div>
+                                </div>
+                                <!-- <input type="text" class="form-control" value="Department" placeholder="Dep" /> -->
+                                {% if fedit_form.linkedin.errors %}
+                                    {{ fedit_form.linkedin(class="form-control", placeholder='https://linkedin.com/username', style="border-color: red;")|safe }}
+                                    <div class="invalid-feedback">
+                                        {% for error in fedit_form.linkedin.errors %}
+                                            <span style="color: red;">{{ error }}</span>
+                                        {% endfor %}
+                                    </div>
+                                {% else %}
+                                    {{ fedit_form.linkedin(class="form-control", placeholder='https://linkedin.com/username') }}
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="row mt-3">
+                            <div class="form-group" style="font-size: 20px">
+                                <div class="form-group">
+                                    <label for="exampleFormControlTextarea1">About Me</label>
+                                    <!-- <textarea
+                                        class="form-control"
+                                        id="exampleFormControlTextarea1"
+                                        rows="5"
+                                        style="width: 30vw"></textarea> -->
+                                        {% if fedit_form.about_me.errors %}
+                                            {{ fedit_form.about_me(class="form-control", placeholder='About', style="border-color: red;")|safe }}
+                                            <div class="invalid-feedback">
+                                                {% for error in fedit_form.about_me.errors %}
+                                                    <span style="color: red;">{{ error }}</span>
+                                                {% endfor %}
+                                            </div>
+                                        {% else %}
+                                            {{ fedit_form.about_me(class="form-control", placeholder='Work Experience') }}
+                                        {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row-mt-3">
+                            <div class="form-group">
+                                <span>Institution</span>
+                                {% if fedit_form.institution.errors %}
+                                    {{ fedit_form.institution(placeholder="Institution", class="institution-input") }}
+                                    <div>
+                                        {% for error in fedit_form.institution.errors %}
+                                            <span style="color: red;">{{ error }}</span>
+                                        {% endfor %}
+                                    </div>
+                                {% else %}
+                                    {{ fedit_form.institution(placeholder="Institution", class="institution-input") }}
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="row-my-3">
+                            <div class="form-group">
+                                {{ fedit_form.picture.label() }}
+                                {{ fedit_form.picture(class="form-control-file", onchange='loadFile(event)') }}
+                                {% if fedit_form.picture.errors %}
+                                    {% for error in fedit_form.picture.errors %}
+                                        <span class="text-danger">{{ error }}</span></br>
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="mt-5 text-right">
+                            <button class="btn btn-primary profile-button" type="submit">Update Profile</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+    </div>
+</div>
+
+<script type="text/javaScript">
+    var loadFile = function(event) {
+        var output = document.getElementById('live-img-file');
+        output.src = URL.createObjectURL(event.target.files[0]);
+        output.onload = function() {
+            URL.revokeObjectURL(output.src) // free memory
+        }
+    };
+
+    $(document).ready(function() {
+        $('.institution-input').select2();
+    });
+</script>
+{% endblock content %}

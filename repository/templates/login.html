@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Faculty Publication Repository - Login</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+            integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"
+        />
+        <script
+            src="https://code.jquery.com/jquery-3.1.1.min.js"
+            integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+            crossorigin="anonymous"
+        ></script>
+
+        <!-- Select2 Package -->
+        <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}" />
+    </head>
+
+    <body>
+        <!-- SignUp Form -->
+        <br /><br />
+        <div class="container" id="container">
+            <div class="form-container sign-up-container">
+                <form action="{{ url_for('register') }}" method="post">
+                    <h1>Create Account</h1>
+                    <br>
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% if messages %}
+                            {% for category, message in messages %}
+                            <div class="alert alert-{{ category }}">
+                                {{ message }}
+                            </div>
+                            {% endfor %}
+                        {% endif %}
+                    {% endwith %}
+                    {{ reg_form.hidden_tag() }}
+                    {% if reg_form.fname.errors %}
+                        {{ reg_form.fname(placeholder="First Name") }}
+                        <div>
+                            {% for error in reg_form.fname.errors %}
+                                <span style="color: red;">{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ reg_form.fname(placeholder="First Name") }}
+                    {% endif %}
+
+                    {% if reg_form.lname.errors %}
+                        {{ reg_form.lname(placeholder="Last Name") }}
+                        <div>
+                            {% for error in reg_form.lname.errors %}
+                                <span style="color: red;">{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ reg_form.lname(placeholder="Last Name") }}
+                    {% endif %}
+
+                    {% if reg_form.email.errors %}
+                        {{ reg_form.email(placeholder="Email") }}
+                        <div>
+                            {% for error in reg_form.email.errors %}
+                                <span style="color: red;">{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ reg_form.email(placeholder="Email") }}
+                    {% endif %}
+
+                    <em>You are a</em>
+                    {% if reg_form.role.errors %}
+                        {{ reg_form.role() }}
+                        <div>
+                            {% for error in reg_form.role.errors %}
+                                <span style="color: red;">{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ reg_form.role() }}
+                    {% endif %}
+                    <br>
+
+                    <em>Your Institution</em>
+                    {% if reg_form.institution.errors %}
+                        {{ reg_form.institution(placeholder="Institution", class="institution-input") }}
+                        <div>
+                            {% for error in reg_form.institution.errors %}
+                                <span style="color: red;">{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ reg_form.institution(placeholder="Institution", class="institution-input") }}
+                    {% endif %}
+
+
+                    {% if reg_form.password.errors %}
+                        {{ reg_form.password(placeholder="Password") }}
+                        <div>
+                            {% for error in reg_form.password.errors %}
+                                <span style="color: red;">{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ reg_form.password(placeholder="Password") }}
+                    {% endif %}
+
+                    {% if reg_form.confirm_password.errors %}
+                        {{ reg_form.confirm_password(placeholder="Confirm password") }}
+                        <div>
+                            {% for error in reg_form.confirm_password.errors %}
+                                <span style="color: red;">{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ reg_form.confirm_password(placeholder="Confirm password") }}
+                    {% endif %}
+                    <br>
+                    <button type="submit">Sign Up</button>
+                </form>
+            </div>
+
+            <!-- Login Form -->
+            <div class="form-container sign-in-container">
+                <form action="{{ url_for('login') }}" method="post">
+                    {{ form.hidden_tag() }}
+                    <h1>Sign in</h1>
+                    <div class="social-container">
+                        <a href="{{ url_for('github_login') }}" class="social"><i class="fa-brands fa-github"></i></a>
+                    </div>
+                    <span>Or use email</span>
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% if messages %}
+                            {% for category, message in messages %}
+                            <div class="alert alert-{{ category }}">
+                                {{ message }}
+                            </div>
+                            {% endfor %}
+                        {% endif %}
+                    {% endwith %}
+                    <br />
+
+                    {% if form.email.errors %}
+                        {{ form.email(placeholder="Email", style="outline: red;") }}
+                        <div>
+                            {% for error in form.email.errors %}
+                                <span style="color: red;">{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.email(placeholder="Email") }}
+                    {% endif %}
+
+                    {% if form.password.errors %}
+                        {{ form.password(placeholder="Password", style="outline: red;") }}
+                        <div>
+                            {% for error in form.password.errors %}
+                                <span style="color: red;">{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.password(placeholder="Password") }}
+                    {% endif %}
+                    <div style="display: block;">
+                        <span>{{ form.remember() }} Remember Me</span>
+                    </div>
+                    <a href="{{ url_for('forgot_password') }}">Forgot your password?</a>
+                    <button type="submit">Sign In</button>
+                </form>
+            </div>
+
+            <div class="overlay-container">
+                <div class="overlay">
+                    <div class="overlay-container">
+                        <div class="overlay">
+                            <div class="overlay-panel overlay-left">
+                                <h1>Welcome Back!</h1>
+                                <p>Already a user?</p>
+                                <button class="ghost" id="signIn">
+                                    Sign In
+                                </button>
+                            </div>
+                            <div class="overlay-panel overlay-right">
+                                <h1>Hello,</h1>
+                                <p>New to Faculty Publication Repository?</p>
+                                <button class="ghost" id="signUp" type="submit">
+                                    Sign Up
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script src="{{ url_for('static', filename='js/auth.js') }}"></script>
+        <script type="text/javaScript">
+            $(document).ready(function() {
+                $('.institution-input').select2();
+            });
+        </script>
+    </body>
+</html>
